@@ -1,0 +1,11 @@
+<p><b>{{cls_name}}</b> | <b>{{cls_doc|default_if_none:''}}</b></p>
+<ul>
+    {%for field in field_list%}
+    <li>
+        <b>{{field.label}}</b>
+         <span>{{field.key}}</span>
+         <span>{{field.is_required}}</span>
+         <span>{{field.desc}}</span>
+    </li>
+    {%endfor%}
+</ul>

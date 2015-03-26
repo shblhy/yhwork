@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block coltype %}colSM{% endblock %}
+{% block breadcrumbs %}
+{% endblock %}
+{% block title %}Urls{% endblock %}
+
+{% block content %}
+
+<h1>Url documentation</h1>
+{%for line in res%}
+    {%for urlitem in line%}
+        {{urlitem.regex.pattern}}
+        {%if forloop.last%}
+            {%if urlitem.callbackstr%}
+            <h4><a href="/admin/doc/views/{{urlitem.callbackstr}}/">{{urlitem.callbackstr}}</a></h4>
+            {%endif%}<br/>
+        {%endif%}
+    {%endfor%}
+{%endfor%}
+{% endblock %}
+
+
