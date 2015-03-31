@@ -12,7 +12,8 @@ TYPE_A = ['num','string']
 TYPE_NUM = ['int','float','long','complex']
 TYPE_STRING = ['astr','cstr','regex','rstr']
 TYPE_RSTR = ['digits','domainsafe','letters','lowercase','nondigits','nonletters','nonwhitespace','nonword','normal','postalsafe','printable','punctuation','uppercase','urlsafe','whitespace','word']
-        
+
+
 class RandVar(object):
     '''本类用于解析变量类型(mode)描述。
         变量描述
@@ -25,7 +26,6 @@ class RandVar(object):
         'digits','domainsafe','letters','lowercase','nondigits','nonletters','nonwhitespace','nonword','normal','postalsafe','printable','punctuation','uppercase','urlsafe','whitespace','word' 这些rstr的简便方法
         datetime 包含 time time_1_month
         为了便于编译器理解（你可以.出来），将这些大写，直接作为RandVar的静态变量
-        
         高级扩展（肯定.不出来^_^） 比较：gt lt et bet
         gt 即greater than 大于 lt 即 less than 小于 gte 即大于等于
         bet为两者之间（含等于），此时param为元组
@@ -40,7 +40,7 @@ class RandVar(object):
         编码成本原因暂时不对string实现高级扩展
     '''
     RIGHT_LIMIT = 1
-    
+    #-----------------
     NUM = 'num'
     NOTINS_NUM = 'notins_num'
     STRING = 'string'
@@ -78,25 +78,25 @@ class RandVar(object):
     WHITESPACE = 'rstr_whitespace'
     WORD = 'rstr_word'
     DEFAULT_STR = 'rstr_letters'
-    
+
     #常用字符
-    CN_WORD = 'regex',ur'[\u4e00-\u9fa5]{1,8}'
-    INT_GT_0 = 'int_gt_0',None
-    ASTR = 'rstr_printable',None
-    TIME = 'time',7*24*60*60
-    TIME_B_1_WEEK = 'time',7*24*60*60
-    
+    CN_WORD = 'regex', ur'[\u4e00-\u9fa5]{1,8}'
+    INT_GT_0 = 'int_gt_0', None
+    ASTR = 'rstr_printable', None
+    TIME = 'time', 7 * 24 * 60 * 60
+    TIME_B_1_WEEK = 'time', 7 * 24 * 60 * 60
+
     @staticmethod
     def shortcuts():
-        return [RandVar.CN_WORD,RandVar.INT_GT_0,RandVar.ASTR,RandVar.TIME]
-    
+        return [RandVar.CN_WORD, RandVar.INT_GT_0, RandVar.ASTR, RandVar.TIME]
+
     @staticmethod
     def print_self_constant():
         for s in TYPE_A + TYPE_NUM + TYPE_STRING:
-            print (s).upper() + ' = \'' + (s) +'\''
-            print ('notins_'+s).upper() + ' = \'' + ('notins_'+s) +'\''
+            print (s).upper() + ' = \'' + (s) + '\''
+            print ('notins_' + s).upper() + ' = \'' + ('notins_' + s) + '\''
         for s in TYPE_RSTR:
-            print (s).upper() + ' = \'' + ('rstr_'+s) +'\''
+            print (s).upper() + ' = \'' + ('rstr_' + s) + '\''
 
     @staticmethod
     def parse_mod(mode):
@@ -125,15 +125,15 @@ class RandVar(object):
                 sign = modeitems[1]
         elif modeitems[0] in TYPE_NUM:
             type_need = eval(modeitems[0])
-            if len(modeitems)>1:
-                if modeitems[1] in ['gt','lt','et', 'lte']:
+            if len(modeitems) > 1:
+                if modeitems[1] in ['gt', 'lt', 'et', 'lte']:
                     sign = modeitems[1]
                     param = type_need(modeitems[2])
                 elif modeitems[1] == 'bet':
                     sign = modeitems[1]
-                    param = (type_need(modeitems[2]),type_need(modeitems[3]))
-        return type_need,sign,param,notins
-    
+                    param = (type_need(modeitems[2]), type_need(modeitems[3]))
+        return type_need, sign, param, notins
+
     @staticmethod
     def get_type_desc(mode):
         '''获取类型'''
@@ -141,9 +141,9 @@ class RandVar(object):
         if not t:
             return RandVar.RIGHT_LIMIT
         return t
-     
+
     @staticmethod
-    def gen_data(mode,regex_param=None):
+    def gen_data(mode, regex_param=None):
         '''
         解析mode，获取类型、参数
         regex_exprs 允许为None,正则字串
@@ -151,14 +151,14 @@ class RandVar(object):
         生成参数
         '''
         if mode in RandVar.shortcuts():
-            mode,regex_param = mode[0],mode[1]
+            mode, regex_param = mode[0],mode[1]
             if mode == 'time':
-                randsec = random.randint(0,regex_param)
+                randsec = random.randint(0, regex_param)
                 return (datetime.now() - timedelta(seconds=randsec)).strftime('%Y-%m-%d %H:%M:%S')
         limits = {
-                  int:{'low_limit':-65536,'high_limit':65536,'function':lambda x:random.randrange(x[0],x[1])},
-                  float:{'low_limit':-1024.0,'high_limit':1024.0,'function':lambda x:random.random()*(x[1]-x[0])+x[0]},
-                  long:{'low_limit':-134217728,'high_limit':134217728,'function':lambda x:random.randrange(x[0],x[1])}
+                  int:{'low_limit':-65536,'high_limit':65536,'function': lambda x:random.randrange(x[0],x[1])},
+                  float:{'low_limit':-1024.0,'high_limit':1024.0,'function': lambda x:random.random()*(x[1]-x[0])+x[0]},
+                  long:{'low_limit':-134217728,'high_limit':134217728,'function': lambda x:random.randrange(x[0],x[1])}
                   }
         type_need,sign,param,notins = RandVar.parse_mod(mode)
         if notins:

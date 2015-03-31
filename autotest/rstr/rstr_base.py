@@ -31,7 +31,7 @@ import string
 import itertools
 from copy import copy
 from functools import partial
-from rstr.xeger import Xeger
+from .xeger import Xeger
 
 
 ALPHABETS = {'printable': string.printable,

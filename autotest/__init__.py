@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# encoding: utf-8
 '''
-利用model/form自动进行冒烟测试。
+    对以form写的views方法，可进行冒烟测试
 '''

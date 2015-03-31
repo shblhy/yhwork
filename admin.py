@@ -7,9 +7,23 @@ from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
 from django.forms.models import fields_for_model
 from django.db.models import AutoField
-from widget import Table,Select
+from widget import Table, Select
 from django.utils.translation import ugettext_lazy as _
 from datetime import datetime
+
+
+def ignore_minus(s):
+    if s.startswith('-'):
+        return s[1:]
+    return s
+
+
+def check_order_bys(s, order_bys):
+    for item in s.split(','):
+        if not ignore_minus(item) in order_bys:
+            return False
+    return True
+
 
 class OutManager(object):
     """
@@ -17,34 +31,45 @@ class OutManager(object):
     原计划模拟View编写，可同时处理django orm与sqlalchemy等多种格式数据，但考虑到开发难度目前只支持Model。
     from django.views.generic.base import View
     """
-    fields = [] #需要产生的域，例如表格头行数据
-    visible_fields = [] #不可见的域
-    search_fields = None #可用于搜索的域，也可以由search_form直接产生
+    # 需要产生的域，例如表格头行数据
+    fields = []
+    # 在界面不可见的域，注意在前端需要控件支持
+    visible_fields = []
+    # 可用于搜索的域，也可以由search_form直接产生
+    search_fields = None
+    # 对应的Form表单
     search_form = None
-    order_fields = [] #准许排序的域
-    accessors = {} #域取值办法，如'attr1':lambda x: x.get_status_display() 其中x为该行model
-    accessors_out = {} #域回调办法，当需要外部参数传入时使用
-    labels = {} #域名称，如果此处未定义则取model内容
-    #kwargs = {}
+    # 准许排序的域
+    order_fields = []
+    # 域取值办法，如'attr1':lambda x: x.get_status_display() 其中x为该行model
+    accessors = {}
+    # 域回调办法，当需要外部参数传入时使用
+    accessors_out = {}
+    # 域名称，如果此处未定义则取model的verbose_name
+    labels = {}
+    # 分页器
     paginator_class = Paginator
+    # 默认的表格控件
     table_class = Table
+    # 默认的选择控件
     select_class = Select
     _data_cache = None
     OUT_CALL = 'accessors_out'
     object_list = []
     exclude = []
-    order_by = None #接收外部排序
-    default_order_by = None #默认排序方式
+    # 接收外部排序
+    order_by = None
+    # 默认排序方式
+    default_order_by = None
 
 
-#ListView
 class BaseListManager(MultipleObjectMixin, OutManager):
 
     def __init__(self, **kwargs):
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
-        #if self.search_form:
-        #    self.f
+        #if self.search_form and not self.order_fields:
+        #    self.order_fields = self.search_form.ORDER_BYS
 
     def paginate_queryset(self, queryset, page_size):
         """
@@ -73,9 +98,9 @@ class BaseListManager(MultipleObjectMixin, OutManager):
         return self._data_cache
 
     def get_order_by(self):
-        #如果排序域可用
-        #if self.or self.order_fields:
-        return self.order_by if self.order_by else self.default_order_by
+        if self.order_by and check_order_bys(self.order_by):
+            return self.order_by
+        return self.default_order_by
 
     def parse_order_by(self):
         """解析排序字符串"""
@@ -91,26 +116,29 @@ class BaseListManager(MultipleObjectMixin, OutManager):
                 self.aaSorting.append([int(index), 'asc'])
         return order_list
 
-    def get_line(self,item,excludes=[]):
+    def get_line(self, item, excludes=[]):
         '''
         将对象转变为行输出
         '''
         line = []
-        for field in self.fields+self.visible_fields:
-            if field in excludes:
-                continue
-            func = self.accessors.get(field,None)
-            if  func == OutManager.OUT_CALL: func = self.accessors_out[field]
-            if func:
-                attr = func(item)
-            elif type(item) <> dict:
-                attr = getattr(item,field)
-                if type(attr) == datetime:
-                    attr = attr.strftime('%Y-%m-%d %H:%M:%S')
-            else:
-                attr = item.get('field','')
-            #attr = func(item) if func else getattr(item,field) if type(item) <> dict else item.get('field','')
-            line.append(attr)
+        try:
+            for field in self.fields + self.visible_fields:
+                if field in excludes:
+                    continue
+                func = self.accessors.get(field, None)
+                if  func == OutManager.OUT_CALL:
+                    func = self.accessors_out[field]
+                if func:
+                    attr = func(item)
+                elif type(item) != dict:
+                    attr = getattr(item, field)
+                    if type(attr) == datetime:
+                        attr = attr.strftime('%Y-%m-%d %H:%M:%S')
+                else:
+                    attr = item.get('field', '')
+                line.append(attr)
+        except Exception, e0:
+            raise e0
         return line
 
     def get_rows_data(self):
@@ -158,7 +186,12 @@ class BaseListManager(MultipleObjectMixin, OutManager):
                 if type(f) == AutoField:
                     f.label = f.verbose_name
                     cls.base_fields[f.name] = f
-        return cls.labels[field] if cls.labels.has_key(field) else (unicode(cls.base_fields[field].label if (cls.base_fields.has_key(field) and cls.base_fields[field] is not None) else field))
+        if field in cls.labels:
+            return cls.labels[field]
+        if (field in cls.base_fields and cls.base_fields[field] is not None):
+            return unicode(cls.base_fields[field].label)
+        return unicode(field)
+        #return cls.labels[field] if cls.labels.has_key(field) else (unicode(cls.base_fields[field].label if (cls.base_fields.has_key(field) and cls.base_fields[field] is not None) else field))
 
     def to_chart(self):
         pass
