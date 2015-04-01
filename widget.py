@@ -11,61 +11,52 @@ except:
     #FRONT_TABLE = 'DataTables#www.datatables.net'
     #FRONT_TABLE = 'ShowTableData#chen'
     #FRONT_JS_SELECT = 'Select2'
+
+
 class Widget(object):
+    '''工具接收任何传入值作为其属性'''
     def __init__(self, **kwargs):
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
-            
-            
-class Table(Widget):
+
+
+class BaseTable(Widget):
     rows = []
     columns = []
     page = 0
     page_size = 100
-    
+
     def get_rows(self):
+        '''获取数据内容'''
         return json.dumps(self.rows)
-        
-    
-    def get_custom_rows(self,columns):
-        using_indexs = [self.columns.index((col,coltext)) for col,coltext in self.columns if col in columns]
+
+    def get_custom_rows(self, columns):
+        '''获取指定域的数据'''
+        using_indexs = [self.columns.index((col, coltext)) for col, coltext in self.columns if col in columns]
         return [[line[i] for i in sorted(using_indexs)] for line in self.rows]
-    
+
     def get_columns(self):
+        '''获取表格头行'''
         return json.dumps(self.columns)
-    
-    def get_all(self):
-        res = {}
-        return json.dumps(res)
-    
+
     @property
-    def tmpl(self):
-        return {}
-    
-    def to_csv(self):
-        columnsDict = dict(self.columns)
-        return self.get_custom_rows(columns=self.columns_exclude_action),[columnsDict[c] for c in self.columns_exclude_action]
-    
-    @property
-    def columns_exclude_action(self): 
+    def columns_exclude_action(self):
+        '''获取表格头行，但“操作”单元格除外'''
         columns = dict(self.columns).keys()
         columns.remove('action')
         return columns
-    
-    
-    
-class BaseTable(Table):
-    pass
 
-class TableDataTables(Table):
+
+class TableDataTables(BaseTable):
     def get_columns(self):
-        return json.dumps([{'name':item[0],'value':item[1]} for item in self.columns.items()])
-    
+        return json.dumps([{'name': item[0], 'value': item[1], 'visible': item[1] in self.visible_fields} for item in self.columns.items()])
+
 TABLE_CLASSES = {
-                 'base':BaseTable,
-                 'DataTables':''
+                 'base': BaseTable,
+                 'DataTables': TableDataTables,
                  }
-Table = TABLE_CLASSES[FRONT_TABLE]
+Table = TABLE_CLASSES[FRONT_TABLE.split('#')[0]]
+
 
 class Select(Widget):
     pass

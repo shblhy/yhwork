@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import inspect
 import os
 import re
@@ -28,14 +29,14 @@ class GenericSite(object):
 def doc_index(request):
     if not utils.docutils_is_available:
         return missing_docutils_page(request)
-    return render_to_response('admin_doc/index.html', {
+    return render_to_response('auto_doc/index.html', {
         'root_path': urlresolvers.reverse('admin:index'),
     }, context_instance=RequestContext(request))
 
 @staff_member_required
 def bookmarklets(request):
     admin_root = urlresolvers.reverse('admin:index')
-    return render_to_response('admin_doc/bookmarklets.html', {
+    return render_to_response('auto_doc/bookmarklets.html', {
         'root_path': admin_root,
         'admin_url': mark_safe("%s://%s%s" % (request.is_secure() and 'https' or 'http', request.get_host(), admin_root)),
     }, context_instance=RequestContext(request))
@@ -70,7 +71,7 @@ def template_tag_index(request):
                 'meta': metadata,
                 'library': tag_library,
             })
-    return render_to_response('admin_doc/template_tag_index.html', {
+    return render_to_response('auto_doc/template_tag_index.html', {
         'root_path': urlresolvers.reverse('admin:index'),
         'tags': tags
     }, context_instance=RequestContext(request))
@@ -105,7 +106,7 @@ def template_filter_index(request):
                 'meta': metadata,
                 'library': tag_library,
             })
-    return render_to_response('admin_doc/template_filter_index.html', {
+    return render_to_response('auto_doc/template_filter_index.html', {
         'root_path': urlresolvers.reverse('admin:index'),
         'filters': filters
     }, context_instance=RequestContext(request))
@@ -135,7 +136,7 @@ def view_index(request):
                 'site': site_obj,
                 'url': simplify_regex(regex),
             })
-    return render_to_response('admin_doc/view_index.html', {
+    return render_to_response('auto_doc/view_index.html', {
         'root_path': urlresolvers.reverse('admin:index'),
         'views': views
     }, context_instance=RequestContext(request))
@@ -165,7 +166,7 @@ def view_detail(request, view):
     body = body + '<br/>'.join([form.as_desc() for form in forms])
     for key in metadata:
         metadata[key] = utils.parse_rst(metadata[key], 'model', _('view:') + view)
-    return render_to_response('admin_doc/view_detail.html', {
+    return render_to_response('auto_doc/view_detail.html', {
         'root_path': urlresolvers.reverse('admin:index'),
         'name': view,
         'summary': title,
@@ -193,7 +194,7 @@ def url_index(request):
                 elif type(p) == urlresolvers.RegexURLResolver:
                     resolve_patterns(p.url_patterns,ancestor + [p])
     resolve_patterns(resolver.url_patterns)
-    return render_to_response('admin_doc/url_index.html', {
+    return render_to_response('auto_doc/url_index.html', {
         'root_path': urlresolvers.reverse('admin:index'),
         'res': res
     }, context_instance=RequestContext(request))
@@ -203,6 +204,9 @@ def url_detail(request,url):
     return 
     
 def import_module_without_decorators(mod,func):
+    ''' TODO 由于载入在装饰器将导致func中无法识别内部元素（找不到Form），因此注释了装饰器才载入方法
+    如有办法能在带有django装饰器的情况下依然准确获取func内容，可以删除这个丑陋的方法。
+    '''
     ori_mod = import_module(mod)
     def sub_suffix(filename):
         return filename.replace('.pyc','.py')
@@ -224,7 +228,7 @@ def model_index(request):
     if not utils.docutils_is_available:
         return missing_docutils_page(request)
     m_list = [m._meta for m in models.get_models()]
-    return render_to_response('admin_doc/model_index.html', {
+    return render_to_response('auto_doc/model_index.html', {
         'root_path': urlresolvers.reverse('admin:index'),
         'models': m_list
     }, context_instance=RequestContext(request))
@@ -316,7 +320,7 @@ def model_detail(request, app_label, model_name):
             'data_type' : 'Integer',
             'verbose'   : utils.parse_rst(_("number of %s") % verbose , 'model', _('model:') + opts.module_name),
         })
-    return render_to_response('admin_doc/model_detail.html', {
+    return render_to_response('auto_doc/model_detail.html', {
         'root_path': urlresolvers.reverse('admin:index'),
         'name': '%s.%s' % (opts.app_label, opts.object_name),
         'summary': _("Fields on %s objects") % opts.object_name,
@@ -343,7 +347,7 @@ def template_detail(request, template):
                 'site': site_obj,
                 'order': list(settings_mod.TEMPLATE_DIRS).index(dir),
             })
-    return render_to_response('admin_doc/template_detail.html', {
+    return render_to_response('auto_doc/template_detail.html', {
         'root_path': urlresolvers.reverse('admin:index'),
         'name': template,
         'templates': templates,
@@ -355,7 +359,7 @@ def template_detail(request, template):
 
 def missing_docutils_page(request):
     """Display an error message for people without docutils"""
-    return render_to_response('admin_doc/missing_docutils.html')
+    return render_to_response('auto_doc/missing_docutils.html')
 
 def load_all_installed_template_libraries():
     # Load/register all template tag libraries from installed apps.

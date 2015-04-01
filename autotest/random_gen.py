@@ -6,7 +6,7 @@
 '''
 import random
 import rstr
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 TYPE_A = ['num','string']
 TYPE_NUM = ['int','float','long','complex']
@@ -184,7 +184,8 @@ class RandVar(object):
             return eval(type_need+'.'+sign)()
         elif type_need == 'datetime':
             return datetime.now()
-    
+
+
 if __name__ == '__main__':
     RandVar.print_self_constant()
     print RandVar.gen_data(RandVar.INT)

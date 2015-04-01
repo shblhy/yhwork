@@ -25,8 +25,7 @@ from django.template.loader import get_template
 #from settings import ROOT
 from dowant.utils.dj_expand.forms import PageField
 from datetime import datetime
-log = logging.getLogger('log')
-
+log = logging.getLogger('testlog')
 
 def get_random_data(field, mode=RandVar.RIGHT_LIMIT, modelfield=None):
     if modelfield and modelfield.validators:
@@ -132,11 +131,17 @@ class RequestSet(object):
     def get_views(self):
         pass
 
+    def get_whone_func_name(self):
+        func, _callback_args, _callback_kwargs = self.resolver.resolve(
+                            self.url)
+        return '%s.%s' % (func.__module__, getattr(func, '__name__', func.__class__.__name__))
+
     def get_forms_method(self):
-        from admindocs.views import import_module_without_decorators
-        mod, func = urlresolvers.get_mod_func(self.url_pattern._callback_str)
+        from ..autodocs.views import import_module_without_decorators
+        func_whole_name = self.get_whone_func_name()
+        mod, func = urlresolvers.get_mod_func(func_whole_name)
         try:
-            view_func = import_module_without_decorators(mod,func)
+            view_func = import_module_without_decorators(mod, func)
         except (ImportError, AttributeError):
             raise Http404
         forms = []
@@ -237,7 +242,7 @@ class RequestSet(object):
             self.write_error_log(response_str)
 
     def write_error_log(self, response, res_type='html'):
-        filename = self.url_pattern._callback_str + '.html'
+        filename = self.get_whone_func_name() + '.html'
         log.info('请求失败，错误信息参考' + filename)
         if res_type == 'json':
             template_path = os.path.join(os.path.join(os.path.dirname(__file__), 'template'), 'res_temp.html')
@@ -250,6 +255,7 @@ class RequestSet(object):
         f.write(response)
         f.close()
         return
+
 
 class ReqTest(object):
     def __init__(self, conf):
@@ -273,6 +279,7 @@ class ReqTest(object):
         urlconf = settings.ROOT_URLCONF
         urlresolvers.set_urlconf(urlconf)
         resolver = urlresolvers.RegexURLResolver(r'^/', urlconf)
+        self.resolver = resolver
         res = []
         def resolve_patterns(patterns, ancestor=[]):
             for p in patterns:
@@ -285,6 +292,7 @@ class ReqTest(object):
         self.requests = []
         for item in res:
             if item.url_pattern.name:
+                item.resolver = self.resolver
                 skip = False
                 for name_unmatch in self.backlist:
                     if item.url_patterns[0]._regex ==  name_unmatch or item.url_pattern.name == name_unmatch:
@@ -299,6 +307,7 @@ class ReqTest(object):
 
     def run(self):
         self.gen_requests()
+        #log.info|log.info
         log.info('*****************************************************************************************************************')
         log.info(u'自动化请求模拟测试开始，本次共有' + str(len(self.requests)) + u'个请求需要模拟，当前时间是' + datetime.now().strftime('%Y-%m-%d '))
         for req in self.requests:

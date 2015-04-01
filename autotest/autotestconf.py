@@ -13,70 +13,40 @@ testright 尽量测正确数据（required=true的必然产生，field有validat
 times 测试次数
 thread 模拟测试    用户数（未来实现）
 forbidcookie 禁止自动cookie
--f requests.conf 
+-f requests.conf
     在requests.conf中配置对每个request进行配置
     requests:
     whitelist
     backlist
-    
+
     rollback
     params:{
         xx:{randgen:true  #randgen(随机决定是否生成本数据)
         randmode #随机数据数据描述
-        }  
+        }
         par
     }
 '''
 import os
 from collections import OrderedDict
-from settings import ROOT
+
+ROOT = r'D:\var\log\DeliveryHeroChina'
+
 host = 'localhost'
 cookie = '''csrftoken=0m4p9LeTgg1RsdDsoQYM7ovpRMFWZpWy; session=eyJfZnJlc2giOnRydWUsIl9pZCI6Ijc1MzA0MWM1ZDA2Nzg0NzEwMzNjOGUxNGIwOGU1YjlkIiwidXNlcl9pZCI6IjQ4MSJ9.B73aoA.-qoB3HgjLvwbHuleZ8khL9g_1A4; sessionid=97d55585eaf0b5b13c5cb0ddaf9eba0d'''
-    
-logpath = os.path.join(ROOT,'log')#'logs/autotest.log'
+
+#'logs/autotest.log'
+logpath = os.path.join(ROOT, 'log')
 testright = True
 dopost = True
-rollback = False#
-forbidcookie = False#
-packages = ['client','form']
-whitelist = ['^client/','^form/']
-#whitelist = ['client_brand_action_input']
-
-backlist = ['^accounts/admin/','client_retrieve_brand_detail']
-
+rollback = False
+forbidcookie = False
+packages = ['api']
+whitelist = ['api_v2_cart_failed_orders_by_restaurant',
+             'api_v2_cart_failed_orders_by_order',
+             'api_v2_cart_failed_restaurant_order_detail',
+             ]
+backlist = []
 urlconf = [
-           ('client_brands_html',{
-                                 'params':{
-                                     'brand_id':{'value':'randobj_brand','required':None}
-                                    }
-                                 }),
-           ('client_brands',{
-                                'url':'/client/brands.table',
-                                'params':{
-                                     'brand_id':{'value':'randobj_brand','required':None}
-                                    }
-                                }
-                            ),
-           ('client_stores_html',{
-                                  'params':{
-                                     'brand_id':{'value':'randobj_store','required':None}
-                                    }
-                                  }),
-            ('client_brand_action_input',{
-                                  'params':{
-                                     'brand_id':{'value':'randobj_brand','required':None}
-                                    }
-                                  }),
-           ('client_visit_action_input',{
-                                  'params':{
-                                     'visit_id':{'value':'randobj_visit','required':None}
-                                    }
-                                  }),
-#           ('client_store_action_input',{
-#                                  'params':{
-#                                     'brand_id':{'value':'randobj_store','required':None}
-#                                    }
-#                                  })
-
            ]
 urlconf = OrderedDict(urlconf)

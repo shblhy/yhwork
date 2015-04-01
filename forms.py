@@ -119,12 +119,7 @@ class ExtendBaseForm(object):
                 item['is_required'] = item['is_required'] + u'(默认为' + str(field.default) + ')'
             item['desc'] = get_desc(field)
             field_list.append(item)
-        template_path = os.path.join(os.path.join(os.path.join(os.path.dirname(__file__), 'autodocs'), 'templates'), 'form_desc.html')
-        template_file = open(template_path)
-        template_content = template_file.read()
-        template_file.close()
-        template = Template(template_content)
-        #template = get_template(template_path)
+        template = get_template('form_desc.html')
         return template.render(Context(locals()))
 
 

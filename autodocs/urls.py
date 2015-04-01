@@ -4,46 +4,46 @@ import views
 urlpatterns = patterns('',
     url('^$',
         views.doc_index,
-        name='django-admindocs-docroot'
+        name='django-autodocs-docroot'
     ),
     url('^bookmarklets/$',
         views.bookmarklets,
-        name='django-admindocs-bookmarklets'
+        name='django-autodocs-bookmarklets'
     ),
     url('^tags/$',
         views.template_tag_index,
-        name='django-admindocs-tags'
+        name='django-autodocs-tags'
     ),
     url('^filters/$',
         views.template_filter_index,
-        name='django-admindocs-filters'
+        name='django-autodocs-filters'
     ),
     url('^views/$',
         views.view_index,
-        name='django-admindocs-views-index'
+        name='django-autodocs-views-index'
     ),
     url('^views/(?P<view>[^/]+)/$',
         views.view_detail,
-        name='django-admindocs-views-detail'
+        name='django-autodocs-views-detail'
     ),
     url('^urls/$',
         views.url_index,
-        name='django-admindocs-urls-index'
+        name='django-autodocs-urls-index'
     ),
     url('^urls/(?P<url>[^/]+)/$',
         views.url_detail,
-        name='django-admindocs-urls-detail'
+        name='django-autodocs-urls-detail'
     ),
     url('^models/$',
         views.model_index,
-        name='django-admindocs-models-index'
+        name='django-autodocs-models-index'
     ),
     url('^models/(?P<app_label>[^\.]+)\.(?P<model_name>[^/]+)/$',
         views.model_detail,
-        name='django-admindocs-models-detail'
+        name='django-autodocs-models-detail'
     ),
     url('^templates/(?P<template>.*)/$',
         views.template_detail,
-        name='django-admindocs-templates'
+        name='django-autodocs-templates'
     ),
 )

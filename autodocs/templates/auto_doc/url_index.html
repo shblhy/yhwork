@@ -4,12 +4,18 @@
 
 {% block coltype %}colSM{% endblock %}
 {% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'django-autodocs-docroot' %}">{% trans 'Documentation' %}</a>
+&rsaquo; {% trans 'Urls' %}
+</div>
 {% endblock %}
 {% block title %}Urls{% endblock %}
 
 {% block content %}
 
 <h1>Url documentation</h1>
+描述url的组织，以助项目理解，待完善。<br/>
 {%for line in res%}
     {%for urlitem in line%}
         {{urlitem.regex.pattern}}

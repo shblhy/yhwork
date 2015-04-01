@@ -73,39 +73,39 @@ msgstr "Kampoj en %s objektoj"
 msgid "%s does not appear to be a urlpattern object"
 msgstr "%s ne ŝajnas esti URLmotiva objekto"
 
-#: templates/admin_doc/bookmarklets.html:7 templates/admin_doc/index.html:7
-#: templates/admin_doc/missing_docutils.html:7
-#: templates/admin_doc/model_detail.html:15
-#: templates/admin_doc/model_index.html:9
-#: templates/admin_doc/template_detail.html:7
-#: templates/admin_doc/template_filter_index.html:8
-#: templates/admin_doc/template_tag_index.html:8
-#: templates/admin_doc/view_detail.html:7
-#: templates/admin_doc/view_index.html:8
+#: templates/auto_doc/bookmarklets.html:7 templates/auto_doc/index.html:7
+#: templates/auto_doc/missing_docutils.html:7
+#: templates/auto_doc/model_detail.html:15
+#: templates/auto_doc/model_index.html:9
+#: templates/auto_doc/template_detail.html:7
+#: templates/auto_doc/template_filter_index.html:8
+#: templates/auto_doc/template_tag_index.html:8
+#: templates/auto_doc/view_detail.html:7
+#: templates/auto_doc/view_index.html:8
 msgid "Home"
 msgstr "Ĉefpaĝo"
 
-#: templates/admin_doc/bookmarklets.html:8 templates/admin_doc/index.html:8
-#: templates/admin_doc/missing_docutils.html:8
-#: templates/admin_doc/model_detail.html:16
-#: templates/admin_doc/model_index.html:10
-#: templates/admin_doc/template_detail.html:8
-#: templates/admin_doc/template_filter_index.html:9
-#: templates/admin_doc/template_tag_index.html:9
-#: templates/admin_doc/view_detail.html:8
-#: templates/admin_doc/view_index.html:9
+#: templates/auto_doc/bookmarklets.html:8 templates/auto_doc/index.html:8
+#: templates/auto_doc/missing_docutils.html:8
+#: templates/auto_doc/model_detail.html:16
+#: templates/auto_doc/model_index.html:10
+#: templates/auto_doc/template_detail.html:8
+#: templates/auto_doc/template_filter_index.html:9
+#: templates/auto_doc/template_tag_index.html:9
+#: templates/auto_doc/view_detail.html:8
+#: templates/auto_doc/view_index.html:9
 msgid "Documentation"
 msgstr "Dokumentaro"
 
-#: templates/admin_doc/bookmarklets.html:9
+#: templates/auto_doc/bookmarklets.html:9
 msgid "Bookmarklets"
 msgstr "Legosignetoj"
 
-#: templates/admin_doc/bookmarklets.html:12
+#: templates/auto_doc/bookmarklets.html:12
 msgid "Documentation bookmarklets"
 msgstr "Dokumentaraj legosignetoj"
 
-#: templates/admin_doc/bookmarklets.html:16
+#: templates/auto_doc/bookmarklets.html:16
 msgid ""
 "\n"
 "<p class=\"help\">To install bookmarklets, drag the link to your bookmarks\n"
@@ -125,22 +125,22 @@ msgstr ""
 "ke\n"
 "via komputilo estas \"interna\").</p>\n"
 
-#: templates/admin_doc/bookmarklets.html:26
+#: templates/auto_doc/bookmarklets.html:26
 msgid "Documentation for this page"
 msgstr "Dokumentaro por tiu paĝo"
 
-#: templates/admin_doc/bookmarklets.html:27
+#: templates/auto_doc/bookmarklets.html:27
 msgid ""
 "Jumps you from any page to the documentation for the view that generates "
 "that page."
 msgstr ""
 "Sendas vin el ajna paĝo, al la dokumentado de la vido kiu generis tiun paĝon."
 
-#: templates/admin_doc/bookmarklets.html:29
+#: templates/auto_doc/bookmarklets.html:29
 msgid "Show object ID"
 msgstr "Montri objektan identigilon"
 
-#: templates/admin_doc/bookmarklets.html:30
+#: templates/auto_doc/bookmarklets.html:30
 msgid ""
 "Shows the content-type and unique ID for pages that represent a single "
 "object."
@@ -148,40 +148,40 @@ msgstr ""
 "Montri la enhavan tipon kaj unikan identigilon por paĝoj kiu reprezentas "
 "ununuran objekton."
 
-#: templates/admin_doc/bookmarklets.html:32
+#: templates/auto_doc/bookmarklets.html:32
 msgid "Edit this object (current window)"
 msgstr "Redakti tiun objekton (nuna fenestro)"
 
-#: templates/admin_doc/bookmarklets.html:33
+#: templates/auto_doc/bookmarklets.html:33
 msgid "Jumps to the admin page for pages that represent a single object."
 msgstr "Forsendas al la administradan paĝon kiu reprezentas ununuran objekton."
 
-#: templates/admin_doc/bookmarklets.html:35
+#: templates/auto_doc/bookmarklets.html:35
 msgid "Edit this object (new window)"
 msgstr "Redakti tiun objekton (nova fenestro)"
 
-#: templates/admin_doc/bookmarklets.html:36
+#: templates/auto_doc/bookmarklets.html:36
 msgid "As above, but opens the admin page in a new window."
 msgstr "Kiel supre, sed montras la administradan paĝon en nova fenestro."
 
-#: templates/admin_doc/model_detail.html:17
-#: templates/admin_doc/model_index.html:11
+#: templates/auto_doc/model_detail.html:17
+#: templates/auto_doc/model_index.html:11
 msgid "Models"
 msgstr "Modeloj"
 
-#: templates/admin_doc/template_detail.html:9
+#: templates/auto_doc/template_detail.html:9
 msgid "Templates"
 msgstr "Ŝablonoj"
 
-#: templates/admin_doc/template_filter_index.html:10
+#: templates/auto_doc/template_filter_index.html:10
 msgid "Filters"
 msgstr "Filtriloj"
 
-#: templates/admin_doc/template_tag_index.html:10
+#: templates/auto_doc/template_tag_index.html:10
 msgid "Tags"
 msgstr "Etikedoj"
 
-#: templates/admin_doc/view_detail.html:9
-#: templates/admin_doc/view_index.html:10
+#: templates/auto_doc/view_detail.html:9
+#: templates/auto_doc/view_index.html:10
 msgid "Views"
 msgstr "Vidoj"

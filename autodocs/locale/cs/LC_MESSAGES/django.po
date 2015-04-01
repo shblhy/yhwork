@@ -75,39 +75,39 @@ msgstr "Pole položek typu %s"
 msgid "%s does not appear to be a urlpattern object"
 msgstr "Objekt %s patrně není typu urlpattern."
 
-#: templates/admin_doc/bookmarklets.html:7 templates/admin_doc/index.html:7
-#: templates/admin_doc/missing_docutils.html:7
-#: templates/admin_doc/model_detail.html:15
-#: templates/admin_doc/model_index.html:9
-#: templates/admin_doc/template_detail.html:7
-#: templates/admin_doc/template_filter_index.html:8
-#: templates/admin_doc/template_tag_index.html:8
-#: templates/admin_doc/view_detail.html:7
-#: templates/admin_doc/view_index.html:8
+#: templates/auto_doc/bookmarklets.html:7 templates/auto_doc/index.html:7
+#: templates/auto_doc/missing_docutils.html:7
+#: templates/auto_doc/model_detail.html:15
+#: templates/auto_doc/model_index.html:9
+#: templates/auto_doc/template_detail.html:7
+#: templates/auto_doc/template_filter_index.html:8
+#: templates/auto_doc/template_tag_index.html:8
+#: templates/auto_doc/view_detail.html:7
+#: templates/auto_doc/view_index.html:8
 msgid "Home"
 msgstr "Domů"
 
-#: templates/admin_doc/bookmarklets.html:8 templates/admin_doc/index.html:8
-#: templates/admin_doc/missing_docutils.html:8
-#: templates/admin_doc/model_detail.html:16
-#: templates/admin_doc/model_index.html:10
-#: templates/admin_doc/template_detail.html:8
-#: templates/admin_doc/template_filter_index.html:9
-#: templates/admin_doc/template_tag_index.html:9
-#: templates/admin_doc/view_detail.html:8
-#: templates/admin_doc/view_index.html:9
+#: templates/auto_doc/bookmarklets.html:8 templates/auto_doc/index.html:8
+#: templates/auto_doc/missing_docutils.html:8
+#: templates/auto_doc/model_detail.html:16
+#: templates/auto_doc/model_index.html:10
+#: templates/auto_doc/template_detail.html:8
+#: templates/auto_doc/template_filter_index.html:9
+#: templates/auto_doc/template_tag_index.html:9
+#: templates/auto_doc/view_detail.html:8
+#: templates/auto_doc/view_index.html:9
 msgid "Documentation"
 msgstr "Dokumentace"
 
-#: templates/admin_doc/bookmarklets.html:9
+#: templates/auto_doc/bookmarklets.html:9
 msgid "Bookmarklets"
 msgstr "Bookmarklety"
 
-#: templates/admin_doc/bookmarklets.html:12
+#: templates/auto_doc/bookmarklets.html:12
 msgid "Documentation bookmarklets"
 msgstr "Dokumentační bookmarklety"
 
-#: templates/admin_doc/bookmarklets.html:16
+#: templates/auto_doc/bookmarklets.html:16
 msgid ""
 "\n"
 "<p class=\"help\">To install bookmarklets, drag the link to your bookmarks\n"
@@ -128,11 +128,11 @@ msgstr ""
 "\"\"interní\" (promluvte si s vaším správcem, jestli si nejste jisti,\n"
 "zda je váš počítač \"interní\").</p>\n"
 
-#: templates/admin_doc/bookmarklets.html:26
+#: templates/auto_doc/bookmarklets.html:26
 msgid "Documentation for this page"
 msgstr "Dokumentace k této stránce"
 
-#: templates/admin_doc/bookmarklets.html:27
+#: templates/auto_doc/bookmarklets.html:27
 msgid ""
 "Jumps you from any page to the documentation for the view that generates "
 "that page."
@@ -140,52 +140,52 @@ msgstr ""
 "Z libovolné stránky otevře dokumentaci pohledu (view), který generoval tuto "
 "stránku."
 
-#: templates/admin_doc/bookmarklets.html:29
+#: templates/auto_doc/bookmarklets.html:29
 msgid "Show object ID"
 msgstr "Ukázat id položky"
 
-#: templates/admin_doc/bookmarklets.html:30
+#: templates/auto_doc/bookmarklets.html:30
 msgid ""
 "Shows the content-type and unique ID for pages that represent a single "
 "object."
 msgstr ""
 "Zobrazí content-type a unikátní ID stránek reprezentujících jedinou položku."
 
-#: templates/admin_doc/bookmarklets.html:32
+#: templates/auto_doc/bookmarklets.html:32
 msgid "Edit this object (current window)"
 msgstr "Upravit tuto položku (ve stávajícím okně)"
 
-#: templates/admin_doc/bookmarklets.html:33
+#: templates/auto_doc/bookmarklets.html:33
 msgid "Jumps to the admin page for pages that represent a single object."
 msgstr ""
 "Přepne do administračního rozhraní stránek reprezentujících jedinou položku."
 
-#: templates/admin_doc/bookmarklets.html:35
+#: templates/auto_doc/bookmarklets.html:35
 msgid "Edit this object (new window)"
 msgstr "Upravit tuto položku (v novém okně)"
 
-#: templates/admin_doc/bookmarklets.html:36
+#: templates/auto_doc/bookmarklets.html:36
 msgid "As above, but opens the admin page in a new window."
 msgstr "Jako výše, ale otevře prostředí správy v novém okně."
 
-#: templates/admin_doc/model_detail.html:17
-#: templates/admin_doc/model_index.html:11
+#: templates/auto_doc/model_detail.html:17
+#: templates/auto_doc/model_index.html:11
 msgid "Models"
 msgstr "Modely"
 
-#: templates/admin_doc/template_detail.html:9
+#: templates/auto_doc/template_detail.html:9
 msgid "Templates"
 msgstr "Šablony"
 
-#: templates/admin_doc/template_filter_index.html:10
+#: templates/auto_doc/template_filter_index.html:10
 msgid "Filters"
 msgstr "Filtry"
 
-#: templates/admin_doc/template_tag_index.html:10
+#: templates/auto_doc/template_tag_index.html:10
 msgid "Tags"
 msgstr "Tagy"
 
-#: templates/admin_doc/view_detail.html:9
-#: templates/admin_doc/view_index.html:10
+#: templates/auto_doc/view_detail.html:9
+#: templates/auto_doc/view_index.html:10
 msgid "Views"
 msgstr "Views"

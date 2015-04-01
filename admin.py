@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 '''
-内容管理，实现内容到json的转换以适应前端控件要求。
+内容管理（列表数据容器），实现列表内容到json的转换以适应前端控件要求。
 '''
 from django.views.generic.list import MultipleObjectMixin
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
 from django.forms.models import fields_for_model
 from django.db.models import AutoField
-from widget import Table, Select
+from widget import Table
 from django.utils.translation import ugettext_lazy as _
 from datetime import datetime
 
@@ -35,27 +35,21 @@ class OutManager(object):
     fields = []
     # 在界面不可见的域，注意在前端需要控件支持
     visible_fields = []
-    # 可用于搜索的域，也可以由search_form直接产生
-    search_fields = None
-    # 对应的Form表单
-    search_form = None
     # 准许排序的域
     order_fields = []
     # 域取值办法，如'attr1':lambda x: x.get_status_display() 其中x为该行model
     accessors = {}
-    # 域回调办法，当需要外部参数传入时使用
+    # 域回调办法，当需要外部参数传入时使用，也可以用于传入外部参数以进行表级处理。
     accessors_out = {}
+    OUT_CALL = 'accessors_out'
     # 域名称，如果此处未定义则取model的verbose_name
     labels = {}
     # 分页器
     paginator_class = Paginator
     # 默认的表格控件
     table_class = Table
-    # 默认的选择控件
-    select_class = Select
+    # 数据暂存
     _data_cache = None
-    OUT_CALL = 'accessors_out'
-    object_list = []
     exclude = []
     # 接收外部排序
     order_by = None
@@ -64,12 +58,11 @@ class OutManager(object):
 
 
 class BaseListManager(MultipleObjectMixin, OutManager):
+    '''列表数据容器'''
 
     def __init__(self, **kwargs):
         for key, value in kwargs.iteritems():
             setattr(self, key, value)
-        #if self.search_form and not self.order_fields:
-        #    self.order_fields = self.search_form.ORDER_BYS
 
     def paginate_queryset(self, queryset, page_size):
         """
@@ -79,10 +72,7 @@ class BaseListManager(MultipleObjectMixin, OutManager):
         try:
             page_number = int(self.page)
         except ValueError:
-            if self.page == 'last':
-                page_number = paginator.num_pages
-            else:
-                raise Http404(_(u"参数page无法转化为正确页码"))
+            raise Http404(_(u"参数page无法转化为正确页码"))
         try:
             page = paginator.page(page_number)
             return (paginator, page, page.object_list, page.has_other_pages())
@@ -102,27 +92,14 @@ class BaseListManager(MultipleObjectMixin, OutManager):
             return self.order_by
         return self.default_order_by
 
-    def parse_order_by(self):
-        """解析排序字符串"""
-        order_list = []
-        for index in self.order_by.split(','):
-            if not index:
-                continue
-            if index.startswith('-'):
-                order_list.append('-' + self.columns[int(index[1:])].order_field)
-                self.aaSorting.append([int(index[1:]), 'desc'])
-            else:
-                order_list.append(self.columns[int(index)].order_field)
-                self.aaSorting.append([int(index), 'asc'])
-        return order_list
-
     def get_line(self, item, excludes=[]):
         '''
         将对象转变为行输出
+        通过get_line与accessors配合完成行级操作
         '''
         line = []
         try:
-            for field in self.fields + self.visible_fields:
+            for field in self.fields:
                 if field in excludes:
                     continue
                 func = self.accessors.get(field, None)
@@ -142,6 +119,7 @@ class BaseListManager(MultipleObjectMixin, OutManager):
         return line
 
     def get_rows_data(self):
+        '''表级处理，重写此方法以完成自定义的表级操作'''
         return [self.get_line(item) for item in self.data['object_list']]
 
     @property
@@ -152,7 +130,7 @@ class BaseListManager(MultipleObjectMixin, OutManager):
         table_args = {
                       'rows': self.get_rows_data(),
                       'columns': self.get_field_labels(),
-                      'visible_columns': [(v, '') for v in self.visible_fields],
+                      'visible_fields': self.visible_fields,
                       'page_size': self.paginate_by,
                       'page': self.page,
                       'total': self.data['paginator'].count,
@@ -161,26 +139,26 @@ class BaseListManager(MultipleObjectMixin, OutManager):
         table_args.update(kwargs)
         return self.table_class(**table_args)
 
-    def get_field_labels(self):
+    def to_chart(self):
+        pass
+
+    def to_select(self):
+        return
+
+    def as_desc(self):
+        return
+
+    @classmethod
+    def get_field_labels(cls):
         '''
             返还域数组，形如[(field,label),]
         '''
-        return [(field, type(self).field_label(field)) for field in self.fields]
+        return [(field, cls.field_label(field)) for field in cls.fields]
 
     @classmethod
     def field_label(cls, field):
         if not hasattr(cls, 'base_fields'):
-            '''
-            def tran_form_field(field,**kwargs):
-                if type(field)==AutoField:
-                    defaults = {'form_class': IntegerField}
-                    defaults.update(kwargs)
-                    return IntegerField.formfield(field,**defaults)
-                else:
-                    return field.formfield(field,**kwargs)
-                #f = lambda x:IntegerField.formfield(x) if type(x)==AutoField else x.formfield()
-            '''
-            cls.base_fields = fields_for_model(cls.model, cls.fields, cls.exclude,  None, None)
+            cls.base_fields = fields_for_model(cls.model, cls.fields, [],  None, None)
             '''AutoField djangoform并未为其产生formfield'''
             for f in cls.model._meta.fields:
                 if type(f) == AutoField:
@@ -191,13 +169,6 @@ class BaseListManager(MultipleObjectMixin, OutManager):
         if (field in cls.base_fields and cls.base_fields[field] is not None):
             return unicode(cls.base_fields[field].label)
         return unicode(field)
-        #return cls.labels[field] if cls.labels.has_key(field) else (unicode(cls.base_fields[field].label if (cls.base_fields.has_key(field) and cls.base_fields[field] is not None) else field))
-
-    def to_chart(self):
-        pass
-
-    def to_select(self):
-        return
 
     @property
     def limit_begin(self):

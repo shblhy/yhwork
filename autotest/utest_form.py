@@ -7,12 +7,14 @@ import re
 from datetime import datetime
 from random_gen import RandVar
 from request_gen import RequestSet, ReqTest
+
 from dowant.cart.forms import FailedOrderQForm, FailedOrderRestaurantQForm, FailedRestaurantOrderDetailQForm
 
 
 class FailedOrderQFormTest(unittest.TestCase):
     def runTest(self):
-        test_form_gen_data()
+        #test_form_gen_data()
+        test_req_test()
         print 'end'
 
 
@@ -26,3 +28,9 @@ def test_form_gen_data():
         print 'valid failed:'
     print data
     print form.errors_as_text()
+
+
+def test_req_test():
+    from . import autotestconf
+    req = ReqTest(autotestconf)
+    req.run()

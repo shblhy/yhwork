@@ -1,1 +1,1 @@
-# Empty models.py to allow for specifying admindocs as a test label.
+# Empty models.py to allow for specifying auto as a test label.

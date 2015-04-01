@@ -63,7 +63,7 @@ def parse_rst(text, default_reference_context, thing_being_parsed=None):
         'doctitle_xform' : True,
         'inital_header_level' : 3,
         "default_reference_context" : default_reference_context,
-        "link_base" : reverse('django-admindocs-docroot').rstrip('/')
+        "link_base" : reverse('django-autodocs-docroot').rstrip('/')
     }
     if thing_being_parsed:
         thing_being_parsed = smart_str("<%s>" % thing_being_parsed)
