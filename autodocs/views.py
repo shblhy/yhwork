@@ -10,8 +10,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.db import models
 from django.shortcuts import render_to_response
 from django.core.exceptions import ImproperlyConfigured, ViewDoesNotExist
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.core import urlresolvers
+from django.template.loader import get_template, Context 
 import utils
 from django.contrib.sites.models import Site
 from django.utils.importlib import import_module
@@ -141,6 +142,50 @@ def view_index(request):
         'views': views
     }, context_instance=RequestContext(request))
 
+
+@staff_member_required
+def view_test(request, view, viewclass):
+    return
+
+
+@staff_member_required
+def view_class_detail(request, view, viewclass):
+    if not utils.docutils_is_available:
+        return missing_docutils_page(request)
+    mod, func = urlresolvers.get_mod_func(view)
+    try:
+        #view_func = getattr(import_module(mod), func)
+        view_func = import_module_without_decorators(mod, func)
+    except (ImportError, AttributeError):
+        raise Http404
+
+    module = import_module(mod)
+    if viewclass == 'view':
+        form = None
+        manager = None
+        module = import_module(mod)
+        for var in view_func.func_code.co_names:
+            if var.endswith('Form') and not form:
+                form = getattr(module, var)
+            if var.endswith('ListManager') and not manager:
+                manager = getattr(module, var)
+        form_desc = form.as_desc('rst')
+        manager_desc = manager.as_desc('rst')
+        template = get_template('views_desc.rst')
+        return HttpResponse(template.render(Context(locals())), content_type='application/script; charset=UTF-8')
+    find_class = False
+    for var in view_func.func_code.co_names:
+        if var == viewclass:
+            value = getattr(module, var)
+            find_class = True
+    if not find_class:
+        raise Http404
+    if var.endswith('Form'):
+        value = getattr(module, var)
+    elif var.endswith('ListManager'):
+        value = getattr(module, var)
+    return HttpResponse(value.as_desc('rst'), content_type='application/script; charset=UTF-8')
+
 @staff_member_required
 def view_detail(request, view):
     if not utils.docutils_is_available:
@@ -153,20 +198,26 @@ def view_detail(request, view):
     except (ImportError, AttributeError):
         raise Http404
     forms = []
+    managers = []
     module = import_module(mod)
     for var in view_func.func_code.co_names:
         if var.endswith('Form'):
             value = getattr(module, var)
             forms.append(value)
+        if var.endswith('ListManager'):
+            value = getattr(module, var)
+            managers.append(value)
     title, body, metadata = utils.parse_docstring(view_func.__doc__)
     if title:
         title = utils.parse_rst(title, 'view', _('view:') + view)
     if body:
         body = utils.parse_rst(body, 'view', _('view:') + view)
     body = body + '<br/>'.join([form.as_desc() for form in forms])
+    body = body + '<br/>'.join([manager.as_desc() for manager in managers])
     for key in metadata:
         metadata[key] = utils.parse_rst(metadata[key], 'model', _('view:') + view)
     return render_to_response('auto_doc/view_detail.html', {
+        'can_test': bool(forms),
         'root_path': urlresolvers.reverse('admin:index'),
         'name': view,
         'summary': title,

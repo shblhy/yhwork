@@ -16,7 +16,7 @@
 
 <h1>{{ name }}</h1>
 
-<h2 class="subhead">{{ summary|striptags }}</h2>
+<h2 class="subhead">{{ summary|striptags }}{%if can_test%}<a href="view.txt" style="float: right;letter-spacing: 5">文本说明</a>&nbsp;&nbsp;<a href="autotest" style="float: right;letter-spacing: 5">模拟测试</a>{%endif%}</h2>
 
 {{ body|safe}}
 

@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 '''
-111内容管理（列表数据容器），实现列表内容到json的转换以适应前端控件要求。
+内容管理（列表数据容器），实现列表内容到json的转换以适应前端控件要求。
 '''
+from datetime import datetime
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic.list import MultipleObjectMixin
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404
 from django.forms.models import fields_for_model
+from django.template.loader import get_template, Context
 from django.db.models import AutoField
 from widget import Table
-from django.utils.translation import ugettext_lazy as _
-from datetime import datetime
 
 
 def ignore_minus(s):
@@ -59,6 +60,7 @@ class OutManager(object):
 
 class BaseListManager(MultipleObjectMixin, OutManager):
     '''列表数据容器'''
+    object_list = []
 
     def __init__(self, **kwargs):
         for key, value in kwargs.iteritems():
@@ -128,9 +130,9 @@ class BaseListManager(MultipleObjectMixin, OutManager):
 
     def to_table(self, **kwargs):
         table_args = {
+                      '_manager_': type(self),
+                      '_manager_class_': self,
                       'rows': self.get_rows_data(),
-                      'columns': self.get_field_labels(),
-                      'visible_fields': self.visible_fields,
                       'page_size': self.paginate_by,
                       'page': self.page,
                       'total': self.data['paginator'].count,
@@ -139,13 +141,22 @@ class BaseListManager(MultipleObjectMixin, OutManager):
         table_args.update(kwargs)
         return self.table_class(**table_args)
 
+    @classmethod
+    def to_empty_table(cls):
+        table_args = {
+                      '_manager_class_': cls,
+                      'rows': [],
+                      'page_size': cls.paginate_by,
+                      'page': 1,
+                      'total': 0,
+                      'num_pages': 0,
+                      }
+        return cls.table_class(**table_args)
+
     def to_chart(self):
         pass
 
     def to_select(self):
-        return
-
-    def as_desc(self):
         return
 
     @classmethod
@@ -181,3 +192,29 @@ class BaseListManager(MultipleObjectMixin, OutManager):
             return ' limit ' + str(self.paginate_by) + ' offset ' + str(self.limit_begin)
         else:
             return ' limit ' + str(self.paginate_by) + ' offset ' + str(self.limit_begin)
+
+    @classmethod
+    def as_desc(cls, tmpl='listmanager_desc.html'):
+        '''返回数据描述'''
+        '''
+        域声明：['域名':'域中文名']
+        内容声明：
+            数据容器：[ModelClass(对象)]
+            设置说明：分页/可排序域/排序设定
+        输出声明：(输出必须有转化对象，默认为self.table_class)
+            友好json
+        '''
+        if tmpl == 'rst':
+            tmpl = 'listmanager_desc.rst'
+        cls_base_name = cls_name = cls.__name__
+        def to_str(value):
+            return '' if value is None else unicode(value)
+        if issubclass(cls, BaseListManager):
+            cls_name = cls_name + ' | ' + to_str(cls.model._meta.verbose_name) + u'列表管理'
+        cls_doc = cls.__doc__
+        cls_model_name = cls.model.__name__
+        cls_model_label = '(' + unicode(cls.model._meta.verbose_name) + ')' if unicode(cls.model._meta.verbose_name) else ''
+        field_list = cls.get_field_labels()
+        output_str = cls.to_empty_table().get_rows()
+        template = get_template(tmpl)
+        return template.render(Context(locals()))

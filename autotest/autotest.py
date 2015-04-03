@@ -27,4 +27,4 @@ forbidcookie 禁止自动cookie
     }
 '''
 class Abc(object):
-    return
+    pass

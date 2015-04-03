@@ -75,13 +75,15 @@ class ExtendBaseForm(object):
         return values, res, form.errors_as_json()
 
     @classmethod
-    def as_desc(cls):
+    def as_desc(cls, tmpl='form_desc.html'):
         '''返回表单描述'''
         '''
         品牌（brand）（查询）表单
         ID    id    描述    限制/正则
         ID    id    描述    限制/正则
         '''
+        if tmpl == 'rst':
+            tmpl = 'form_desc.rst'
         from django.template import Context, Template
         from django.template.loader import get_template
         def to_str(value):
@@ -104,7 +106,7 @@ class ExtendBaseForm(object):
                 return u'日期'
             else:
                 return field.__class__.__name__
-        cls_name = cls.__name__
+        cls_base_name = cls_name = cls.__name__
         if issubclass(cls, models.ModelForm):
             cls_name = cls_name + ' | ' + to_str(cls.Meta.model._meta.verbose_name) + u'表单'
         cls_doc = cls.__doc__
@@ -119,7 +121,7 @@ class ExtendBaseForm(object):
                 item['is_required'] = item['is_required'] + u'(默认为' + str(field.default) + ')'
             item['desc'] = get_desc(field)
             field_list.append(item)
-        template = get_template('form_desc.html')
+        template = get_template(tmpl)
         return template.render(Context(locals()))
 
 

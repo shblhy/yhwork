@@ -25,6 +25,16 @@ class BaseTable(Widget):
     columns = []
     page = 0
     page_size = 100
+    _manager_ = None
+    _manager_class_ = None
+
+    @property
+    def columns(self):
+        return self._manager_class_.get_field_labels()
+
+    @property
+    def visible_fields(self):
+        return self._manager_class_.visible_fields
 
     def get_rows(self):
         '''获取数据内容'''

@@ -22,9 +22,14 @@ urlpatterns = patterns('',
         views.view_index,
         name='django-autodocs-views-index'
     ),
+
     url('^views/(?P<view>[^/]+)/$',
         views.view_detail,
         name='django-autodocs-views-detail'
+    ),
+    url('^views/(?P<view>.*)/(?P<viewclass>.*)\.txt$',
+        views.view_class_detail,
+        name='django-autodocs-views-detail-rst'
     ),
     url('^urls/$',
         views.url_index,
