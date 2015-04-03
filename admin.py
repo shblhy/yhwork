@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-内容管理（列表数据容器），实现列表内容到json的转换以适应前端控件要求。
+111内容管理（列表数据容器），实现列表内容到json的转换以适应前端控件要求。
 '''
 from django.views.generic.list import MultipleObjectMixin
 from django.core.paginator import Paginator, InvalidPage
