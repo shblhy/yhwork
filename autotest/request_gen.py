@@ -23,7 +23,7 @@ from django.utils.importlib import import_module
 from django.template import Context,Template
 from django.template.loader import get_template
 #from settings import ROOT
-from dowant.utils.dj_expand.forms import PageField
+from dowant.utils.djex.forms import PageField
 from datetime import datetime
 log = logging.getLogger('testlog')
 

@@ -1,6 +1,11 @@
 {% extends "admin/base_site.html" %}
+{% load staticfiles %}
 {% load i18n %}
 {% load url from future %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static "auto_doc/css/autodocs.css" %}" />
+{% endblock %}
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
@@ -16,7 +21,10 @@
 
 <h1>{{ name }}</h1>
 
-<h2 class="subhead">{{ summary|striptags }}{%if can_test%}<a href="view.txt" style="float: right;letter-spacing: 5">文本说明</a>&nbsp;&nbsp;<a href="autotest" style="float: right;letter-spacing: 5">模拟测试</a>{%endif%}</h2>
+<div style="float: left;width: 100%;">
+<div class="lefttitle"><h2 class="subhead">{{ summary|striptags }}</h2></div>
+<div style="float: right;">{%if can_test%}<a href="view.txt" style="margin:20px">文本说明</a>&nbsp;&nbsp;<a href="autotest" style="margin:20px">模拟测试</a>{%endif%}</div>
+</div>
 
 {{ body|safe}}
 

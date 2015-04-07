@@ -1,11 +1,20 @@
 <div style="width: 100%"><b>{{cls_name}}</b><a href="{{cls_base_name}}.txt" style="float:right">文本说明</a><br/></div>
-<b>{{cls_doc|default_if_none:''}}</b><br/>
-<b>域声明：</b>
-	<p>[{%for field,label in field_list%}{{field}}:{{label}}{%if not forloop.last%}， {%endif%}{%if forloop.counter|divisibleby:5%}<br/>{%endif%}{%endfor%}]</p>
-<b>内容声明：</b>
-        <p>数据：[{{cls_model_name}}{{cls_model_label}}]</p>
-        <p>设置：</p>
-        	分页: {{cls.paginate_by}}<br/>
-        	排序：可排序域[]  |  默认排序<{{cls.default_order_by}}><br/>
- <b>输出声明：</b>
- 		<p>{{output_str|safe}}</p>
+{{cls_doc|default_if_none:''}}<br/>
+<b style="margin-left: 20px">域声明：</b>
+	<ul><b>[</b>{%for field,label in field_list%}<li class="horizontal"><b>{{field}}</b>:{{label}}</li>{%if forloop.counter|divisibleby:3%}{%if forloop.last%}<b>]</b>{%else%}<br/>{%endif%}{%endif%}{%endfor%}
+	</ul>
+<div style="float: left;width: 100%;">
+	<b style="margin-left: 20px">内容声明：</b>
+</div>
+<div style="float:left;width: 100%;padding-left:50px;">
+    <p>数据：[{{cls_model_name}}{{cls_model_label}}]</p>
+    <p>设置：</p>
+    	分页: {{cls.paginate_by}}<br/>
+    	排序：可排序域[]  |  默认排序<{{cls.default_order_by}}>
+ </div>
+<div style="float: left;width: 100%;">
+	<b style="margin-left: 20px">输出声明：</b>
+</div>
+<div style="float:left;width: 100%;padding-left:50px;">
+	<p>{{output_str|safe}}</p>
+</div>

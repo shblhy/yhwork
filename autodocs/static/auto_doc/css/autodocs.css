@@ -1,0 +1,8 @@
+ul li.horizontal {
+	display:inline;
+	line-height:15px;
+	height:auto;
+	word-break:break-all;
+	word-wrap:break-word;
+	margin:20px;
+}

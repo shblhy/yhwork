@@ -97,7 +97,7 @@ class ExtendBaseForm(object):
                 return u'字符串'
             elif isinstance(field, forms.ChoiceField):
                 if not isinstance(field, models.ModelChoiceField):
-                    choice_str = ','.join([str(k) + ':' + str(v) for k, v in field.choices[:20] if k])
+                    choice_str = ','.join([unicode(k) + ':' + unicode(v) for k, v in field.choices[:20] if k])
                     if len(field.choices) > 20:
                         choice_str += u'等等'
                     return u'枚举(' + choice_str + ')'
